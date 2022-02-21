@@ -18,7 +18,8 @@ function npmr() {
   pkgcmd=$(__getnpmpkg)
   if [ ! -f package.json ]; then
     echo "package.json not found" >&2
-  else 
+  elif [ -z "$1" ]; then
+    echo $1
     local command=$(jq -r '.scripts | keys[]' package.json | tr -d '"' | 
     fzf --reverse \
       --preview-window=:wrap \
@@ -27,6 +28,8 @@ function npmr() {
     if [ -n "$command" ]; then
       eval "$pkgcmd run $command"
     fi
+  else
+    eval "$pkgcmd run $@"
   fi
 }
 
